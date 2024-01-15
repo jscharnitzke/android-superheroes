@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -63,18 +67,17 @@ fun HeroAvatar(
     modifier: Modifier = Modifier,
     @DrawableRes imageResId: Int,
 ) {
-    Box(modifier = modifier.size(72.dp)) {
+    Box(modifier = modifier.size(72.dp).clip(RoundedCornerShape(8.dp)).aspectRatio(1f)) {
         Image(
             painter = painterResource(id = imageResId),
             contentDescription = null,
-            modifier = Modifier.clip(RoundedCornerShape(8.dp))
+            modifier = modifier
         )
     }
 }
 
 @Composable
 fun HeroDetails(
-    modifier: Modifier = Modifier,
     @StringRes nameResId: Int,
     @StringRes descriptionResId: Int,
 ) {
@@ -91,10 +94,32 @@ fun HeroDetails(
     }
 }
 
+@Composable
+fun HeroesList(
+    modifier: Modifier = Modifier,
+    heroes: List<Hero>,
+) {
+    LazyColumn(
+        modifier = modifier.padding(8.dp)) {
+        items(heroes) {
+            HeroCard(hero = it, modifier = Modifier.padding(8.dp))
+        }
+    }
+}
+
 @Preview
 @Composable
 fun HeroCardPreview() {
     SuperheroesTheme {
         HeroCard(hero = HeroesRepository.heroes[0])
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun SuperheroesPreview() {
+    SuperheroesTheme {
+        HeroesList(heroes = HeroesRepository.heroes, modifier = Modifier.fillMaxWidth())
     }
 }
